@@ -1,0 +1,62 @@
+<style>
+bodY {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.center {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #000;
+}
+.wave {
+  width: 7px;
+  height: 100px;
+  background: linear-gradient(45deg, cyan, #fff);
+  margin: 10px;
+  animation: wave 1s linear infinite;
+  border-radius: 20px;
+  display:none;
+}
+
+@keyframes wave {
+  0% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+</style>
+
+<div class="center">
+<!-- <div class="wave"></div>
+<div class="wave"></div>
+<div class="wave"></div>
+<div class="wave"></div>
+<div class="wave"></div>
+<div class="wave"></div>
+<div class="wave"></div>
+<div class="wave"></div>
+<div class="wave"></div>
+<div class="wave"></div> -->
+</div>
+
+<script>
+  let waveIndex = 20;
+  let waver = document.querySelector(".center");
+  for(var index = 0; index < waveIndex; index++) {
+    waver.innerHTML += `<div class="wave"></div>`
+  }
+
+  const waveAni = document.querySelectorAll(".wave");
+  waveAni.forEach((el, index) => {
+    el.style.animationDelay = index/10 + "s";
+    el.style.display = "block";
+  });
+</script>
