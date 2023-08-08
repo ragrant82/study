@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <title>LAYER POPUP</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+
+    <style>
+        html, body, div, span, applet, object, iframe,h1, h2, h3, h4, h5, h6, p, blockquote, pre,a, abbr, acronym, address, big, cite, code,del, dfn, em, img, ins, kbd, q, s, samp,small, strike, strong, sub, sup, tt, var,b, u, i, center,
+        dl, dt, dd, ol, ul, li,fieldset, form, label, legend,table, caption, tbody, tfoot, thead, tr, th, td,article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary,time, 
+        mark, audio, video {
+        margin: 0;padding: 0;border: 0;font-size: 100%;font: inherit;vertical-align: baseline;}
+        article, aside, details, figcaption, figure, 
+        footer, header, hgroup, menu, nav, section {display: block;}
+        body {line-height: 1;}
+        ol, ul, li {list-style: none;}
+        blockquote, q {quotes: none;}
+        blockquote:before, blockquote:after,
+        q:before, q:after {content: '';content: none;}
+        table {border-collapse: collapse;border-spacing: 0;}
+
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        /* * {box-sizing:border-box;} */
+        #wrap {font-family:'Noto Sans KR', sans-serif; width:100%; background:#fff; overflow:hidden; padding:100px 0 0px; box-sizing:border-box;}
+        #wrap .content {width:100%; padding:0 50px; box-sizing:border-box; z-index:1; overflow-x:hidden;}
+        #wrap .content h3 {font-size:40px; font-weight:700; text-align:center; margin-bottom:50px; }
+        #wrap .content ul {display:flex; justify-content:space-between; }
+        #wrap .content ul li {width:22%; cursor:pointer;}
+        #wrap .content .imgBox {display:block; position:relative; width:100%; height:20.5vw; border-radius:10px; overflow:hidden; border:2px solid slateblue;}
+        #wrap .content .imgBox img {display:block; position:absolute; width:100%; top:50%; -webkit-transform:translateY(-50%); -ms-transform:translateY(-50%); transform:translateY(-50%);}
+        #wrap .content p {font-size:18px; padding:20px 0; text-align:center;}
+        #wrap .layer_bg {display:none; position:absolute; width:100vw; height:100vh; left:0px; top:0px; background:rgba(0,0,0,0.5); z-index:2}
+        #wrap .layer_bg.active {display:block;}
+        #wrap .layer_bg .layer_popup {display:block; position:absolute; width:700px; left:50%; -webkit-transform:translateX(-50%); -ms-transform:translateX(-50%); transform:translateX(-50%); background:#fff; border-radius:20px; padding-bottom:40px; box-sizing:border-box;}
+        #wrap .layer_bg .layer_popup h3 {font-size:20px; font-weight:700; color:#fff; text-align:center; padding:30px 0; background:#000; border-radius:20px 20px 0 0;}
+        #wrap .layer_bg .layer_popup p {font-size:14px; font-weight:400; color:#000; text-align:left; padding:30px 30px 0 30px; line-height:25px; min-height:120px;}
+        #wrap .layer_bg .layer_popup .closeBtn {display:block; position:absolute; width:36px; height:36px; line-height:36px; top:22px; right:22px; color:yellow; font-family:Arial, Helvetica, sans-serif; font-size:25px; text-align:center; cursor:pointer; border:1px solid yellow; border-radius:50%;}
+    </style>
+</head>
+
+<body>
+    <div id="wrap">
+        <div class="content">
+            <h3>고 양 이 (C A T)</h3>
+            <ul>
+                <li>                    
+                    <div class="imgBox">
+                        <img src="https://ragrant82.github.io/study/img_cat01.png">
+                    </div>                    
+                    <p>렉돌 (RAGDOLL CAT)</p>
+                </li>
+                <li>
+                    <div class="imgBox">
+                        <img src="https://ragrant82.github.io/study/img_cat02.png">
+                    </div>                    
+                    <p>노르웨이 숲 (NORWEGIAN FOREST CAT)</p>
+                </li>
+                <li>
+                    <div class="imgBox">
+                        <img src="https://ragrant82.github.io/study/img_cat03.png">
+                    </div>                    
+                    <p>메인쿤 (MAINE COON)</p>
+                </li>
+                <li>
+                    <div class="imgBox">
+                        <img src="https://ragrant82.github.io/study/img_cat04.png">
+                    </div>                    
+                    <p>러시안 블루 (RUSSIAN BLUE)</p>
+                </li>
+            </ul>
+        </div>
+        <div class="layer_bg">
+        </div>
+    </div>
+</body>
+<script type="text/JavaScript">
+
+/* 초기 변수 선언 부분 */
+const _body = document.querySelector("body");
+const _popMargin = 50; //팝업 생성시 위 아래 마진 값 및 상단 고정 값
+const _popStaticH = _popMargin*2 + 160; //위아래 여백*2 + 내부 레이어 고정값 160px = 고정 여백값
+const _catBtns = document.querySelectorAll(".content ul li");
+const _bgLayer = document.querySelector(".layer_bg");
+
+/* fetch api를 사용해 외부 html의 내용을 지정된 부분에 innerHTML로 삽입 */
+function loadHtml(IDX){
+    fetch("https://ragrant82.github.io/study/innerLayer_cat0"+IDX+".html")
+    .then(response => {
+    return response.text()
+    })
+    .then(data => {
+        _bgLayer.innerHTML = data;
+    });
+}
+
+/* 레이어 팝업 */
+/* 01. 윈도우 높이(_windowH)가 팝업의 실제 높이(_innerLayerH) 보다 작을 경우 :: 팝업 높이값 구해서 스크롤 생성하고 중앙에 고정 */
+/* 02. 윈도우 높이(_windowH)가 팝업의 최소 높이(_innerMinH) 보다 작을 경우 :: 전체 윈도우에 스크롤 생성 및 팝업 상단에 고정 */
+/* 03. 윈도우 높이(_windowH)가 팝업의 실제 높이(_innerLayerH) 보다 크거나 같은 경우 :: 중앙에 고정 */
+function drawLayerPopup(){
+    _bgLayer.classList.add("active");
+
+    let _windowH = window.innerHeight;
+    let _outerLayer = document.querySelector(".layer_bg .layer_popup");
+    let _innerLayer = document.querySelector(".layer_bg .layer_popup p");
+    let _innerLayerH = _innerLayer.clientHeight + _popStaticH;
+    const _innerMinH = 150 + _popStaticH; //내부 레이어 최소높이값(min-height:150px) + 고정 여백값
+    const _closeBtn = document.querySelector(".closeBtn");    
+
+    // 01. + 02.
+    if(_windowH < _innerLayerH){
+        // 02. 윈도우 높이(_windowH)가 팝업의 최소 높이(_innerMinH) 보다 작을 경우
+        if(_windowH <= _innerMinH) {    
+            _outerLayer.style.top = _popMargin + "px";
+            _bgLayer.style.height = _innerLayerH + "px";
+            _body.style.overflowX = "hidden";
+        }
+        // 01. 윈도우 높이(_windowH)가 팝업의 실제 높이(_innerLayerH) 보다 작을 경우
+        else{            
+            _innerLayer.style.height = _windowH - _popStaticH + "px";
+            _innerLayer.style.overflowY = "scroll";
+            _outerLayer.style.top = _popMargin + "px";
+            _body.style.overflowY = "hidden";
+        }        
+    }
+    // 03. 윈도우 높이(_windowH)가 팝업의 실제 높이(_innerLayerH) 보다 크거나 같은 경우
+    else{
+        _outerLayer.style.top = (_windowH - _outerLayer.clientHeight) / 2 + "px"; //윈도우 높이에서 팝업의 높이를 뺸 후 나누기 2 값 만큼 상단에 고정
+        _innerLayer.style.height = _innerLayerH - _popStaticH + "px";
+    }
+
+    //닫기 버튼 클릭시 동작
+    _closeBtn.onclick = () => {
+        _bgLayer.classList.remove("active");
+    }
+
+    // console.log(_windowH);
+    // console.log(_innerLayerH);
+}
+
+//각각의 버튼 클릭시 loadHtml(IDX) 로 팝업 생성 한 후 drawLayerPopup()으로 높이값 및 스크롤 조정 (정확한 적용을 위해 타임딜레이 셋팅)
+_catBtns.forEach((_element, _index) => {
+    _element.onclick = () => {
+        _xindex = _index + 1;
+        loadHtml(_xindex);        
+        setTimeout(drawLayerPopup,300);
+    }
+});
+
+// window.addEventListener("resize", function(){
+//     if(_bgLayer.classList.contains("active")){
+//         drawLayerPopup();
+//     }
+// });
+
+</script>
+
+</html>
